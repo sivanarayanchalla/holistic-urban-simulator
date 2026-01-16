@@ -1,6 +1,6 @@
 # 🏙️ Holistic Urban Simulator - Multi-City Policy Analysis
 
-**Version**: 2.0 | **Status**: ✅ Complete (Phase 1-2) | **Last Updated**: January 15, 2026
+**Version**: 2.1 | **Status**: 🟡 In Calibration (Phase 1-2 Complete, Phase 3 In Progress) | **Last Updated**: January 15, 2025
 
 ---
 
@@ -16,6 +16,33 @@ A comprehensive urban simulation framework for analyzing policy impacts across m
 ✅ **Strategic Recommendations** - City-specific policy guidance with €140M investment roadmap  
 ✅ **Interactive Dashboards** - 30+ visualizations (maps, comparisons, forecasts)  
 ✅ **Ready for Implementation** - Stakeholder-ready documents and data
+
+---
+
+## 🔄 CALIBRATION IN PROGRESS (8-Phase Program)
+
+**Phase Progress:**
+```
+Phase 1: Architecture Audit        ✅ COMPLETE (25 pages)
+Phase 2: Rent Calibration          ✅ COMPLETE (30 pages, 51 neighborhoods)
+Phase 3: Population Scaling        🟡 IN-PROGRESS (starting now)
+Phase 4: Neighborhoods & Zones     ⏳ PENDING (2-3 hours)
+Phase 5: Demographics              ⏳ PENDING (3-4 hours)
+Phase 6: Re-run Simulations        ⏳ PENDING (2-3 hours)
+Phase 7: Validation                ⏳ PENDING (2 hours)
+Phase 8: Final Documentation       ⏳ PENDING (1-2 hours)
+
+Overall Progress: ████████░░░░░░░░░░░░ 25% COMPLETE
+```
+
+**Recent Calibration Discoveries:**
+- ✅ Root cause of rent overestimate found (random initial €300-€1,500 + ±2%/step formula)
+- ✅ Real rent data collected (51 neighborhoods across 3 cities)
+- ✅ Calibration strategy developed (3-phase approach: initial rent → sensitivity → zones)
+- ✅ Zone definitions created (center/inner/mid-ring/suburbs per city)
+- 🟡 Population scaling factors needed (next task)
+
+**See:** [QUICK_REFERENCE.md](QUICK_REFERENCE.md) for detailed phase status
 
 ---
 
