@@ -326,8 +326,8 @@ Connection in `.env`:
 DB_HOST=localhost
 DB_PORT=5432
 DB_NAME=urban_sim
-DB_USER=simulator_user
-DB_PASSWORD=UrbanSim2026!
+DB_USER=#
+DB_PASSWORD=#
 ```
 
 ### **Python Environment**
