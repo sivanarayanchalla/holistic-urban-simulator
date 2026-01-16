@@ -1,0 +1,53 @@
+# requirements.txt
+# ============================================
+# CORE DATA SCIENCE & SPATIAL
+# ============================================
+geopandas>=0.14.0          # Spatial data manipulation
+shapely>=2.0.0             # Geometric operations
+pyproj>=3.6.0              # Coordinate transformations
+rtree>=1.0.0               # Spatial indexing
+
+# ============================================
+# DATABASE CONNECTIVITY (PostgreSQL/PostGIS)
+# ============================================
+psycopg2-binary>=2.9.0     # PostgreSQL adapter
+sqlalchemy>=2.0.0          # ORM and database abstraction
+geoalchemy2>=0.14.0        # Spatial ORM for SQLAlchemy
+
+# ============================================
+# URBAN DATA & NETWORK ANALYSIS
+# ============================================
+osmnx>=1.7.0               # OpenStreetMap data retrieval
+networkx>=3.0              # Network analysis
+h3>=3.7.0                  # Hexagonal geospatial indexing
+
+# ============================================
+# SIMULATION & MODELING
+# ============================================
+mesa>=2.3.0                # Agent-based modeling framework
+numpy>=1.24.0              # Numerical computing
+pandas>=2.0.0              # Data manipulation
+scipy>=1.10.0              # Scientific computing
+
+# ============================================
+# VISUALIZATION
+# ============================================
+matplotlib>=3.7.0          # Basic plotting
+plotly>=5.18.0             # Interactive plots
+folium>=0.14.0             # Interactive maps
+contextily>=1.4.0          # Basemap tiles
+
+# ============================================
+# UTILITIES & CONFIGURATION
+# ============================================
+python-dotenv>=1.0.0       # Environment variable management
+pyyaml>=6.0                # YAML configuration files
+jupyter>=1.0.0             # Jupyter notebooks for exploration
+ipython>=8.14.0            # Interactive Python shell
+
+# ============================================
+# DEVELOPMENT & TESTING
+# ============================================
+pytest>=7.4.0              # Testing framework
+black>=23.0.0              # Code formatting
+flake8>=6.0.0              # Code linting

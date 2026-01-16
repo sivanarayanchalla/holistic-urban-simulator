@@ -1,0 +1,25 @@
+name: urban-simulator
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.10
+  - geopandas>=0.14
+  - osmnx>=1.7
+  - mesa>=2.3
+  - psycopg2-binary
+  - sqlalchemy
+  - geoalchemy2
+  - pandas>=2.0
+  - numpy>=1.24
+  - shapely>=2.0
+  - networkx>=3.0
+  - folium>=0.14
+  - plotly>=5.18
+  - jupyter
+  - ipython
+  - pyyaml
+  - python-dotenv
+  - pytest
+  - black
+  - flake8 

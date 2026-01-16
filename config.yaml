@@ -1,0 +1,45 @@
+project:
+  name: "Holistic Urban Simulator"
+  version: "1.0.0"
+  city: "Leipzig, Germany"
+  default_crs: "EPSG:4326"
+  default_grid_resolution: 500
+  description: "A modular urban simulation framework"
+
+database:
+  host: "localhost"
+  port: 5432
+  name: "urban_sim"
+  user: "simulator_user"
+  password: "UrbanSim2026!"
+  schema: "public"
+  pool_size: 10
+  echo_sql: false
+
+paths:
+  data_raw: "data/raw"
+  data_processed: "data/processed"
+  data_outputs: "data/outputs"
+  logs: "logs"
+
+simulation:
+  default_timesteps: 100
+  spatial_aggregation: "hexagon"
+  output_formats: ["geojson", "csv", "png"]
+  visualization:
+    map_center: [12.37, 51.34]  # Leipzig coordinates
+    default_zoom: 11
+
+modules:
+  enabled:
+    - population
+    - transportation
+    - housing
+    - safety
+    - commercial
+  default_priorities:
+    population: 1
+    transportation: 2
+    housing: 3
+    safety: 4
+    commercial: 5

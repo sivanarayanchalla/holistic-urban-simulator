@@ -1,0 +1,194 @@
+# Multi-City Urban Simulator - Quick Start
+
+## 4-Step Process
+
+### ✅ Step 1: Fetch Data for All Cities
+```bash
+python src/data_pipeline/fetch_german_cities_data.py
+```
+**What it does:** Downloads OSM data for Leipzig, Berlin, Munich, Hamburg, Cologne
+**Time:** 15-30 minutes
+**Output:** Data files saved in `data/raw/{city}/`
+
+---
+
+### ✅ Step 2: Run Simulations for All Cities
+```bash
+python run_multi_city_simulation.py
+```
+**What it does:** Runs 50-timestep simulation for each city
+**Time:** ~30 seconds total (all 3+ cities)
+**Output:** 3+ simulation runs in database
+
+---
+
+### ✅ Step 3: Generate Analyses
+```bash
+python VALIDATION_REPORT.py
+```
+OR run individually:
+```bash
+python analyze_policy_impact.py
+python analyze_gentrification.py
+python analyze_infrastructure_impact.py
+python analyze_neighborhood_spillovers.py
+python analyze_multi_city.py
+```
+**What it does:** Generates 29+ interactive HTML dashboards
+**Time:** 2-3 minutes
+**Output:** Visualizations in `data/outputs/visualizations/`
+
+---
+
+### ✅ Step 4: View Results
+Open in web browser:
+```
+data/outputs/visualizations/multi_city_comparison.html
+data/outputs/visualizations/multi_city_inequality.html
+data/outputs/visualizations/city_performance_matrix.html
+```
+
+---
+
+## What You'll See
+
+| Visualization | Shows |
+|---|---|
+| **Multi-City Comparison** | Radar chart comparing 6 metrics across all cities |
+| **Inequality Ranking** | Gini coefficient (income distribution) by city |
+| **Performance Matrix** | Heatmap of normalized metrics (0-100 scale) |
+| **Policy Impact** | How 5 policies affect each city differently |
+| **Gentrification Risk** | High-risk neighborhoods in each city |
+| **Infrastructure Impact** | School/hospital/EV effects per city |
+| **Spatial Spillovers** | How changes diffuse between neighborhoods |
+
+---
+
+## Database Setup Check
+
+```bash
+# Check what's in the database
+python -c "
+import sys
+from pathlib import Path
+sys.path.append(str(Path('src')))
+from database.db_config import db_config
+from sqlalchemy import text
+import pandas as pd
+
+with db_config.engine.connect() as conn:
+    result = pd.read_sql(text('SELECT city_name, COUNT(*) FROM simulation_run GROUP BY city_name'), conn)
+    print('Cities in database:')
+    print(result)
+"
+```
+
+---
+
+## City Coordinates (Already Built-In)
+
+| City | Population | Bounding Box | Status |
+|------|-----------|--------------|--------|
+| **Leipzig** | 620,000 | 12.20, 51.25, 12.55, 51.45 | ✅ Ready |
+| **Berlin** | 3,645,000 | 13.08, 52.34, 13.76, 52.67 | Ready to fetch |
+| **Munich** | 1,484,000 | 11.30, 48.07, 11.73, 48.27 | Ready to fetch |
+| **Hamburg** | 1,852,000 | 9.73, 53.40, 10.32, 53.62 | Optional |
+| **Cologne** | 1,087,000 | 6.78, 50.88, 7.15, 51.07 | Optional |
+
+---
+
+## Typical Results You'll Get
+
+### Policy Impact (Example - Leipzig)
+```
+Population Growth: -70% (high taxation)
+Safety Improvement: +49.3% (priority on social infrastructure)
+Rent Change: +28.1% (controlled with EV subsidy)
+Employment: 0% (transit offsetting tax burden)
+```
+
+### Gentrification (Example - Leipzig)
+```
+Stable neighborhoods: 0 cells
+Appreciating: 1 cell (+118% rent growth)
+Gentrifying: 0 cells
+Declining: 19 cells
+```
+
+### Multi-City Comparison
+```
+Highest population: Berlin (expected, largest city)
+Safest: Varies by policy mix
+Most affordable: Varies by rent control
+Lowest inequality: Depends on progressive tax policy
+```
+
+---
+
+## Optional: Add More Cities Later
+
+All 5 cities already in the framework. To add a 6th city:
+
+1. Add to `CITY_CONFIGS` dict in `fetch_german_cities_data.py`
+2. Add to `CITIES` dict in `run_multi_city_simulation.py`
+3. Run `python src/data_pipeline/fetch_german_cities_data.py`
+
+That's it!
+
+---
+
+## Files Modified/Created
+
+**New Files:**
+- ✅ `src/data_pipeline/fetch_german_cities_data.py` (Generic city fetcher)
+- ✅ `run_multi_city_simulation.py` (Multi-city runner)
+- ✅ `MULTI_CITY_SETUP_GUIDE.md` (This guide)
+
+**Updated Files:**
+- ✅ `src/core_engine/simulation_engine.py` (Added city_name support)
+- ✅ `analyze_multi_city.py` (Enhanced comparisons)
+
+**Database:**
+- ✅ `simulation_run.city_name` column now populated correctly
+- ✅ Supports multiple cities in single database
+
+---
+
+## Troubleshooting
+
+**Problem:** Fetch script times out
+**Solution:** Run cities one at a time, increase timeout
+
+**Problem:** Simulation fails for new city
+**Solution:** Check `spatial_grid` table has cells for that city
+
+**Problem:** Multi-city comparison only shows 1 city
+**Solution:** Verify all runs have `city_name` set, re-run analysis
+
+**Problem:** HTML files won't load
+**Solution:** Use `file://` protocol, not http, check browser console
+
+---
+
+## Performance
+
+| Task | Duration |
+|------|----------|
+| Fetch 1 city data | 15-30 min |
+| Simulate 1 city | 0.1 sec |
+| Simulate 3 cities | 0.3 sec |
+| Generate all analyses | 2-3 min |
+| **TOTAL** | **20-40 min** |
+
+---
+
+## Next: Real-World Use
+
+Once you have multi-city data:
+1. **Calibrate** parameters with real urban metrics
+2. **Create scenarios** (e.g., "Climate emergency", "Housing crisis")
+3. **Compare policies** across cities
+4. **Identify best practices** for each city
+5. **Export for planning** teams
+
+Explore `VALIDATION_REPORT.txt` for full technical documentation.
