@@ -19,15 +19,33 @@ A comprehensive urban simulation framework for analyzing policy impacts across m
 
 ---
 
-## 🎯 Current State Results
+## ⚠️ CRITICAL LIMITATIONS NOTICE
+
+**READ BEFORE USING THIS ANALYSIS:**
+
+This simulation contains **fundamental calibration issues** that make all numbers preliminary:
+- ❌ **Population scale** (867-970 residents) appears to be grid cells, NOT actual city population
+- ❌ **Rent values** (€2,940-€3,050/mo) are 2-3x higher than real 2024 market prices
+- ❌ **Geographic heterogeneity** is missing (all locations treated identically)
+- ❌ **Demographic diversity** is absent (no families, students, workers, immigrants separately)
+
+**Confidence Level: LOW** - These findings are PRELIMINARY and need recalibration before stakeholder decisions.
+
+**See:** [CRITICAL_FINDINGS_DATA_CALIBRATION.md](CRITICAL_FINDINGS_DATA_CALIBRATION.md) for detailed analysis.
+
+---
+
+## 🎯 Preliminary Results (Needing Calibration)
 
 ### **Baseline Metrics (Timestep 50 - End of Simulation)**
 
-| City | Population | Avg Rent | Vitality | Displacement Risk | Assessment |
-|------|-----------|----------|----------|------------------|-----------|
-| **Berlin** | 867 | €2,940.75/mo | 0.145 | 0.527 | Most affordable |
-| **Leipzig** | 705 | €3,049.69/mo | 0.131 | 0.552 | Highest rents, affordability crisis |
-| **Munich** | 970 | €3,004.36/mo | 0.155 | 0.546 | Strongest performer |
+| City | Grid Units | Sim Rent | Real Rent (2024) | Issue |
+|------|-----------|----------|------------------|-------|
+| **Berlin** | 867 | €2,941/mo | €1,200-€1,500 | **2.0-2.5x too high** |
+| **Leipzig** | 705 | €3,050/mo | €800-€1,200 | **2.5-3.8x too high** |
+| **Munich** | 970 | €3,004/mo | €1,800-€2,200 | **1.4-1.7x too high** |
+
+**Note:** Population numbers (867, 705, 970) likely represent grid cells, not actual residents. Real metropolitan populations are millions. Scaling factor unknown.
 
 ### **Policy Scenario Winners**
 
@@ -104,56 +122,78 @@ holistic_urban_simulator/
 
 ## 🚀 Quick Start
 
-### **1. View Policy Recommendations** (5 minutes)
-- **[SESSION_COMPLETE.md](SESSION_COMPLETE.md)** - Quick summary
-- **[POLICY_TESTING_COMPLETE.md](POLICY_TESTING_COMPLETE.md)** - Full executive summary (12 pages)
+## 🚀 Quick Start (With Caveats)
+
+### **IMPORTANT FIRST STEP: Data Calibration Reality**
+→ Read: [CRITICAL_FINDINGS_DATA_CALIBRATION.md](CRITICAL_FINDINGS_DATA_CALIBRATION.md) (5 min)  
+→ Understand: Why all numbers below are PRELIMINARY  
+→ Know: These need validation before real decisions
+
+### **1. View Policy Framework** (5 minutes)
+- **[SESSION_COMPLETE.md](SESSION_COMPLETE.md)** - Shows methodology
+- **Note**: Results are preliminary, method is sound
 
 ### **2. View Interactive Dashboards** (10 minutes)
-Open in web browser:
-- **[policy_scenarios_comparison.html](data/outputs/visualizations/policy_scenarios_comparison.html)** - Compare all 5 scenarios
+Open in web browser (but remember: based on uncalibrated data):
+- **[policy_scenarios_comparison.html](data/outputs/visualizations/policy_scenarios_comparison.html)** - Compare 5 scenarios
 - **[policy_dashboard_berlin.html](data/outputs/visualizations/policy_dashboard_berlin.html)** - Berlin analysis
 - **[policy_dashboard_leipzig.html](data/outputs/visualizations/policy_dashboard_leipzig.html)** - Leipzig analysis
 - **[policy_dashboard_munich.html](data/outputs/visualizations/policy_dashboard_munich.html)** - Munich analysis
 
+**Caveat**: These show framework; baseline rents and populations need recalibration
+
 ### **3. View Geographic Analysis** (5 minutes)
-- **[map_congestion_t50_*.html](data/outputs/visualizations)** - Traffic patterns by neighborhood
+- **[map_congestion_t50_*.html](data/outputs/visualizations)** - Traffic patterns
 - **[gentrification_risk_map.html](data/outputs/visualizations)** - Displacement risk
 - **[neighborhood_classification.html](data/outputs/visualizations)** - Spatial clustering
 
-### **4. Read Detailed Analysis** (30 minutes)
-- **[POLICY_ANALYSIS_SUMMARY.md](POLICY_ANALYSIS_SUMMARY.md)** - Detailed findings & strategies
-- **[ANALYSIS_REPORT_3CITIES.md](ANALYSIS_REPORT_3CITIES.md)** - Baseline metrics
+**Missing**: Zone-based analysis (center vs. suburbs)
+
+### **4. Understand Limitations** (30 minutes)
+- **[CRITICAL_FINDINGS_DATA_CALIBRATION.md](CRITICAL_FINDINGS_DATA_CALIBRATION.md)** - What's wrong and how to fix
+- **Key**: Geographic heterogeneity and demographic breakdown missing
+- **Timeline**: 4-5 weeks to validated analysis
 
 ---
 
 ## 📊 What's Been Analyzed
 
-### **Population Dynamics**
-- ✅ Current baseline: 867 (Berlin), 705 (Leipzig), 970 (Munich)
-- ✅ Population evolution over 50 timesteps
-- ✅ Policy impact projections: +5% to +12% growth
+## 📊 What's Been Analyzed (With Limitations)
+
+**⚠️ All findings below are PRELIMINARY. Real-world calibration needed.**
+
+### **Population Dynamics** 
+- ❌ Current baseline (867-970 units) is unclear in meaning
+- ❌ Real cities have millions of residents, not hundreds
+- Need: Clarify if units = grid cells, households, or people
+- Need: Establish scaling factor to real population
 
 ### **Housing Affordability**
-- ✅ Rent analysis: €2,940-€3,050/month
-- ✅ Leipzig affordability crisis identified
-- ✅ Policy impacts: -20% rent reduction (-€600/month)
+- ❌ Simulation rent (€2,940-€3,050) is **2-3x higher** than real market
+- ✅ Real 2024 Berlin: €1,200-€1,500/mo (not €2,941)
+- ✅ Real 2024 Leipzig: €800-€1,200/mo (not €3,050)
+- ✅ Real 2024 Munich: €1,800-€2,200/mo (not €3,004)
+- **Impact:** Policy recommendations are based on wrong baseline prices
 
 ### **Urban Vitality**
-- ✅ Commercial activity metrics
-- ✅ Transit accessibility analysis
-- ✅ Green space distribution
-- ✅ Safety scores and social cohesion
+- ✅ Commercial activity metrics collected
+- ❌ Missing: Geographic variation (what's different by neighborhood?)
+- ❌ Missing: Which residents benefit most?
+- Need: Break down by location and demographic group
 
 ### **Equity & Displacement**
-- ✅ Displacement risk assessment
-- ✅ Gentrification patterns
-- ✅ Policy mitigation strategies
+- ✅ Displacement risk assessed (0.527-0.552)
+- ❌ Missing: WHO gets displaced? Where do they go?
+- ❌ Missing: Geographic displacement patterns
+- ❌ Missing: Impacts by income level, household type
+- Need: Demographic-level analysis
 
 ### **Geographic/Spatial Analysis**
-- ✅ Hexagonal grid mapping
-- ✅ Traffic congestion heatmaps
-- ✅ Neighborhood clustering
-- ✅ Gentrification risk maps
+- ✅ Hexagonal grid mapping exists
+- ❌ Missing: Location-based rent variation
+- ❌ Missing: Amenity-driven differences (transport, shopping, jobs)
+- ❌ Missing: Zone classification (center, inner, mid-ring, suburbs)
+- Need: Geographic heterogeneity modeling
 
 ---
 
@@ -259,57 +299,74 @@ python create_city_dashboards.py
 
 ## 🎓 For Different Stakeholders
 
+## 🎓 For Different Stakeholders
+
+### ⚠️ IMPORTANT: Read Critical Findings First
+All audiences should start with: **[CRITICAL_FINDINGS_DATA_CALIBRATION.md](CRITICAL_FINDINGS_DATA_CALIBRATION.md)**
+
+Then proceed based on role:
+
 ### **City Mayors** (5-min read)
-→ Read: [SESSION_COMPLETE.md](SESSION_COMPLETE.md) "Key Decision Points"  
-→ View: [policy_dashboard_[city].html](data/outputs/visualizations)  
-→ Key: Your recommended policy + impact
+→ Read: [CRITICAL_FINDINGS_DATA_CALIBRATION.md](CRITICAL_FINDINGS_DATA_CALIBRATION.md) "Bottom Line"  
+→ Then: [SESSION_COMPLETE.md](SESSION_COMPLETE.md) "Key Decision Points"  
+→ Important: These are PRELIMINARY recommendations, not final  
+→ Next: Budget calibration needed before final decisions
 
 ### **City Councils** (15-min presentation)
-→ Show: [policy_scenarios_comparison.html](data/outputs/visualizations/policy_scenarios_comparison.html)  
-→ Reference: [POLICY_TESTING_COMPLETE.md](POLICY_TESTING_COMPLETE.md)  
-→ Focus: Current state → Recommendation → Outcomes
+→ Show: Framework and methodology first  
+→ Reference: [CRITICAL_FINDINGS_DATA_CALIBRATION.md](CRITICAL_FINDINGS_DATA_CALIBRATION.md)  
+→ Focus: "What we learned" + "What needs fixing"  
+→ Be honest: Baseline data needs validation before big spending
 
 ### **Budget Officers** (30-min review)
-→ Read: [POLICY_ANALYSIS_SUMMARY.md](POLICY_ANALYSIS_SUMMARY.md) "Budget & Implementation"  
-→ Key: €140M total | €459k per resident | 3-year timeline  
-→ Details: City-specific allocations in document
+→ Read: [CRITICAL_FINDINGS_DATA_CALIBRATION.md](CRITICAL_FINDINGS_DATA_CALIBRATION.md) "How to Fix These Issues"  
+→ Key: €140M estimate is PRELIMINARY and needs recalibration  
+→ Reality: Actual budget may be 50-200% different once calibrated  
+→ Timing: Complete calibration in 4-5 weeks before final budgets
 
 ### **Urban Planners** (Deep dive)
-→ Read: [POLICY_ANALYSIS_SUMMARY.md](POLICY_ANALYSIS_SUMMARY.md)  
-→ View: Geographic dashboards  
-→ Run: Python analysis scripts  
-→ Study: All visualizations
+→ Read: All critical documents  
+→ Focus: Geographic heterogeneity section (missing from current model)  
+→ Study: What demographic analysis is needed  
+→ Action: Help calibrate baseline data with real 2024 numbers
 
 ### **Community/Stakeholders** (Visual)
-→ View: Interactive HTML dashboards  
-→ Focus: policy_scenarios_comparison.html  
-→ Takeaway: Visual comparison of scenarios
+→ Caution: Don't present preliminary numbers as facts  
+→ Better: Show methodology first  
+→ Message: "We're testing policy ideas, results pending validation"  
+→ Timing: Full analysis after calibration (4-5 weeks)
 
 ---
 
-## 🔄 Implementation Roadmap
+## 🔄 Next Steps (Calibration Roadmap)
 
-### **Phase 1: Immediate (Months 1-3)**
-- [ ] City governments approve recommendations
-- [ ] Secure €140M funding
-- [ ] Form regional coordination body
-- [ ] Finalize housing subsidy structure
+### **Priority 1: Data Validation (Weeks 1-2)**
+- [ ] Confirm what "population 867" represents (grid cells? households? people?)
+- [ ] Gather 2024 real rent data (Immobilienscout24, Wunderflats)
+- [ ] Compare to simulation baseline (2-3x overpriced confirmed)
+- [ ] Identify geographic zones (center, inner, mid-ring, suburbs)
+- [ ] Map grid cells to real neighborhoods
 
-### **Phase 2: Short-Term (Year 1)**
-- [ ] Deploy housing subsidies (Leipzig priority)
-- [ ] Begin green space projects
-- [ ] Transit planning and permits
-- [ ] Measure baseline
+### **Priority 2: Calibration (Weeks 2-3)**
+- [ ] Adjust rent baseline to match 2024 market
+- [ ] Establish population scaling factors
+- [ ] Add geographic zone classification
+- [ ] Validate model against historical data (2020 vs 2024)
+- [ ] Test with domain experts
 
-### **Phase 3: Medium-Term (Year 2)**
-- [ ] Transit Phase 1 construction
-- [ ] Housing program evaluation
-- [ ] Expand successful interventions
+### **Priority 3: Enhanced Analysis (Weeks 3-4)**
+- [ ] Add demographic breakdown (by income, household type, age)
+- [ ] Calculate zone-specific policy impacts
+- [ ] Identify who benefits, who loses per policy
+- [ ] Recalibrate budget allocations
+- [ ] Update all recommendations
 
-### **Phase 4: Long-Term (Year 3+)**
-- [ ] Full combined policy implementation
-- [ ] Monitor outcomes vs. projections
-- [ ] Plan Phase 2
+### **Priority 4: Stakeholder Briefing (Week 5)**
+- [ ] Present preliminary findings as FRAMEWORK
+- [ ] Show what changed from initial estimates
+- [ ] Explain calibration improvements
+- [ ] Get sign-off on validated recommendations
+- [ ] Plan implementation timeline
 
 ---
 
@@ -355,13 +412,18 @@ Social: safety_score, social_cohesion_index, displacement_risk
 
 ## ✅ Quality Assurance
 
+## ✅ Quality Assurance
+
 - [x] Database schema verified (30+ columns)
-- [x] 3 complete simulation runs validated
-- [x] Baseline metrics cross-checked
-- [x] Policy models tested
-- [x] All dashboards generated successfully
+- [x] 3 complete simulation runs executed
+- [ ] ⚠️ **Baseline metrics need real-world calibration**
+- [ ] ⚠️ **Geographic heterogeneity needs implementation**
+- [ ] ⚠️ **Demographic breakdown needs addition**
 - [x] Code executed end-to-end (no errors)
-- [x] Results verified for plausibility
+- [ ] ⚠️ **Results validated against 2024 market data (PENDING)**
+- [ ] ⚠️ **Policy impacts verified with domain experts (PENDING)**
+
+**Status**: Framework complete, validation in progress
 
 ---
 
@@ -400,25 +462,19 @@ Social: safety_score, social_cohesion_index, displacement_risk
 
 ---
 
-## 📄 Must-See Dashboards
+## 📄 Documentation Guide
 
-**Critical:**
-- `policy_scenarios_comparison.html` - Main comparison tool
-- `policy_dashboard_berlin.html` - Berlin analysis
-- `policy_dashboard_leipzig.html` - Leipzig analysis
-- `policy_dashboard_munich.html` - Munich analysis
+| Document | Status | Purpose | Audience |
+|----------|--------|---------|----------|
+| [CRITICAL_FINDINGS_DATA_CALIBRATION.md](CRITICAL_FINDINGS_DATA_CALIBRATION.md) | ✅ ESSENTIAL | Explains all limitations & fixes | Everyone first |
+| [SESSION_COMPLETE.md](SESSION_COMPLETE.md) | ⚠️ PRELIMINARY | Framework overview | All |
+| [POLICY_TESTING_COMPLETE.md](POLICY_TESTING_COMPLETE.md) | ⚠️ PRELIMINARY | Executive summary | Decision-makers |
+| [POLICY_ANALYSIS_SUMMARY.md](POLICY_ANALYSIS_SUMMARY.md) | ⚠️ PRELIMINARY | Detailed analysis | Planners/Budget |
+| [ANALYSIS_REPORT_3CITIES.md](ANALYSIS_REPORT_3CITIES.md) | ⚠️ PRELIMINARY | Baseline metrics | Analysts |
+| [DELIVERABLES.md](DELIVERABLES.md) | ✅ COMPLETE | Checklist | Project managers |
+| [README_UPDATED.md](README_UPDATED.md) | ⚠️ NEEDS REVIEW | Overview (this file) | Reference |
 
-**Geographic:**
-- `map_congestion_t50_*.html` - Final traffic patterns
-- `gentrification_risk_map.html` - Displacement risk
-- `neighborhood_classification.html` - Spatial clustering
-
-**Additional:**
-- `policy_impact_analysis.html` - Overall impacts
-- `timeline_*.html` - Population evolution (4)
-- `correlation_*.html` - Metric relationships (3)
-
-All in: `data/outputs/visualizations/`
+**Key Point:** All policy documents marked "PRELIMINARY" until calibration complete.
 
 ---
 

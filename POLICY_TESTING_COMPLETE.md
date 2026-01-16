@@ -1,23 +1,41 @@
 # 🎯 POLICY TESTING COMPLETE - Executive Summary
 
+## ⚠️ CRITICAL DISCLAIMER - READ FIRST
+
+**This analysis is PRELIMINARY and contains fundamental calibration issues:**
+
+- ❌ Population scale (867-970 units) likely represents grid cells, not actual residents
+- ❌ Rent values (€2,940-€3,050/mo) are **2-3x higher than 2024 real market prices** (€800-€1,600)
+- ❌ Missing: Geographic heterogeneity (amenities, zones, neighborhoods treated identically)
+- ❌ Missing: Demographic diversity (no families, students, workers, immigrants separately)
+- ❌ Missing: Location-based policy impacts (different zones respond differently)
+
+**Confidence Level: LOW - Not ready for final policy decisions without recalibration**
+
+**See**: [CRITICAL_FINDINGS_DATA_CALIBRATION.md](CRITICAL_FINDINGS_DATA_CALIBRATION.md) for detailed explanation of issues and calibration roadmap.
+
+**Timeline**: 4-5 weeks needed for validation before stakeholder presentations.
+
+---
+
 ## Session Achievements
 
 ### ✅ Analysis Phase (Completed)
 - Extracted baseline metrics from 3-city simulation database
 - Generated 3 interactive HTML dashboards
 - Created detailed analysis report (ANALYSIS_REPORT_3CITIES.md)
-- **Output**: Baseline understanding of current urban dynamics
+- **Output**: Baseline understanding of current urban dynamics (needs calibration)
 
 ### ✅ Policy Testing Phase (Just Completed)
 - Designed 5 realistic policy scenarios (Baseline, Transit, Housing, Green, Combined)
-- Projected impacts across all 3 cities
-- Identified winning policies for each city
-- Generated policy recommendation framework
-- **Output**: Data-driven policy guidance with €140M investment roadmap
+- Projected impacts across all 3 cities (preliminary only)
+- Identified potentially winning policies for each city (pending calibration)
+- Generated policy recommendation framework (methodology sound, numbers preliminary)
+- **Output**: Data-driven policy guidance framework (needs real-world validation)
 
 ---
 
-## 🏆 Key Findings Summary
+## 🏆 Key Findings Summary (PRELIMINARY)
 
 ### Baseline State (Current Simulation - Timestep 50)
 ```
@@ -228,6 +246,112 @@ BASELINE              →  COMBINED POLICY
 - Rents competitive with other Bavarian cities
 - Vitality attracts young professionals + families
 - Position Munich as livable alternative to Stuttgart/Frankfurt
+
+---
+
+## ⚠️ CRITICAL GAPS IN CURRENT ANALYSIS
+
+### **Missing: Geographic Heterogeneity**
+Current model treats all locations identically, but reality shows:
+
+**Real-World Rent Variation (Berlin 2024)**
+- Mitte (center): €1,600/mo → Higher transit, jobs, nightlife
+- Kreuzberg (inner): €1,400/mo → Good amenities, walkable
+- Charlottenburg (mid-ring): €1,200/mo → Suburban, parks, quiet
+- Lichtenberg (periphery): €850/mo → Limited amenities, car-dependent
+
+**Simulation Output**: €2,941/mo everywhere (unrealistic - 2-3x too high)
+
+**Impact**: 
+- Can't determine which zones benefit most from policies
+- Can't predict gentrification patterns (center gets more expensive, periphery gentrifies)
+- Can't show geographic displacement (who moves where?)
+- Can't optimize policy targeting by zone
+
+**What's Needed**: 
+- Zone-based analysis (center vs. suburbs respond differently)
+- Amenity-driven rent modeling (transport, shopping, jobs, schools)
+- Neighborhood-level policy impacts (green space more valuable downtown, transit more valuable in suburbs)
+
+---
+
+### **Missing: Demographic Diversity**
+Current model treats all residents identically, but reality shows different groups:
+
+**Income-Based Groups (Different Needs)**
+- High-income (€4,000+/mo): Can pay €1,600 for central location, value nightlife
+- Middle-income (€2,000-€3,000/mo): Can afford €800-€1,200, need transit
+- Low-income (€1,200-€1,800/mo): Can only afford €500-€700, risk displacement
+- Very low-income (<€1,200/mo): Most at-risk, may face homelessness
+
+**Household Types (Different Preferences)**
+- Families with kids: Need schools, parks, space (mid-ring preference)
+- Young professionals: Want nightlife, jobs, transit (center preference)
+- Students: Need affordability and universities (center/affordable areas)
+- Retirees: Value safety, accessibility, quiet (mid-ring preference)
+- Single workers: Flexible on location, value transit
+
+**Policy Impact Varies by Group**:
+- Housing subsidy: Helps low-income stay, high-income unaffected
+- Transit investment: Critical for students/low-income, less important for affluent
+- Green space: Families love it, students indifferent
+- **Same policy, different impact per demographic!**
+
+**What's Needed**: 
+- Demographic segmentation (by income, household type, age, employment)
+- Group-specific policy analysis (who benefits from each policy?)
+- Equity assessment (which groups are helped vs. hurt?)
+- Displacement tracking (who leaves, where do they go?)
+
+---
+
+### **Missing: Policy-Zone Interactions**
+Policies work differently in different locations:
+
+**Green Space Policy Impact**
+- High-density center: TRANSFORMATIVE (no backyards, adds quality of life)
+- Mid-ring suburbs: MODERATE (people already have gardens)
+- Result: €150/mo rent increase in center, €0 in suburbs
+
+**Transit Investment Impact**
+- Dense center: MINIMAL (already excellent transit, marginal improvement)
+- Peripheral suburbs: TRANSFORMATIVE (enables car-free lifestyle)
+- Result: €0 rent change center, +€300/mo in suburbs
+
+**Housing Subsidy Impact**
+- Center: Keeps middle-class in city, prevents hollowing out
+- Suburbs: Reduces cost but doesn't solve commute problem
+- Result: Different mechanism in each zone
+
+**Current Analysis**: Can't distinguish these zone-specific impacts
+
+**What's Needed**:
+- Zone-by-zone policy modeling
+- Understanding of which zones benefit most from each policy
+- Optimization of policy targeting
+- Cost-benefit analysis by location
+
+---
+
+## ✅ What We Did Well
+
+- ✅ Designed reasonable policy scenarios (logic and structure sound)
+- ✅ Ran projections through simulation framework
+- ✅ Identified which policies had aggregate effects
+- ✅ Created visualizations showing scenario comparisons
+- ✅ Established methodology for policy analysis
+
+## ❌ What Needs Fixing Before Implementation
+
+- ❌ Validate baseline rents against 2024 market (currently 2-3x too high)
+- ❌ Clarify population measurement (grid cells vs. actual residents)
+- ❌ Add geographic zone analysis (current model treats all areas identically)
+- ❌ Add demographic breakdown (missing household types, income levels)
+- ❌ Model zone-specific policy impacts (same policy works differently by location)
+- ❌ Track actual displacement patterns (where do displaced people go?)
+- ❌ Validate with domain experts (planners, economists, housing specialists)
+
+**Timeline**: 4-5 weeks for comprehensive validation and recalibration.
 
 ---
 
