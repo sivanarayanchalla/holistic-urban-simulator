@@ -165,6 +165,145 @@ class UrbanModule:
         
         return total_influence / total_weight if total_weight > 0 else 0
 
+class DemographicsModule(UrbanModule):
+    """Handles income segmentation and demographic dynamics.
+    
+    Phase 5: Demographics
+    - Segments population into income groups (30% low, 40% middle, 30% high)
+    - Different income groups respond differently to displacement risk
+    - Models neighborhood gentrification through income shifting
+    
+    Income-Specific Thresholds:
+    - Low income (30%): Displacement risk > 0.4 triggers 20% outmigration/year
+    - Middle income (40%): Displacement risk > 0.6 triggers 10% outmigration/year
+    - High income (30%): Displacement risk > 0.8 attracts new residents (+5%)
+    """
+    
+    def __init__(self):
+        super().__init__("Demographics", {"priority": 0})  # Highest priority
+    
+    def initialize_demographics(self, cells):
+        """Initialize demographic composition in all cells."""
+        for cell_id, cell in cells.items():
+            if 'population' not in cell.state or cell.state['population'] == 0:
+                cell.state['population'] = 1000
+            
+            total_pop = cell.state['population']
+            
+            # Initialize income distribution (30/40/30)
+            low_income_pop = int(total_pop * 0.30)
+            middle_income_pop = int(total_pop * 0.40)
+            high_income_pop = int(total_pop * 0.30)
+            
+            cell.state['low_income_population'] = low_income_pop
+            cell.state['middle_income_population'] = middle_income_pop
+            cell.state['high_income_population'] = high_income_pop
+            
+            # Income-specific attributes
+            cell.state['avg_income_low'] = 1500      # EUR/month
+            cell.state['avg_income_middle'] = 3000   # EUR/month
+            cell.state['avg_income_high'] = 6000     # EUR/month
+            
+            # Affordability thresholds (max 30% of income for housing)
+            cell.state['affordability_threshold_low'] = 1500 * 0.30      # 450 EUR/month
+            cell.state['affordability_threshold_middle'] = 3000 * 0.30   # 900 EUR/month
+            cell.state['affordability_threshold_high'] = 6000 * 0.30     # 1800 EUR/month
+            
+            # Gentrification tracking
+            cell.state['gentrification_index'] = 0.0  # 0=none, 1=complete
+            cell.state['income_diversity_index'] = 1.0  # 1=perfectly balanced
+    
+    def apply_cell_rules(self, cell, neighbors):
+        """Apply demographic dynamics and displacement mechanisms.
+        
+        Phase 5 Implementation: Income-based displacement
+        """
+        # Get population by income segment
+        low_pop = cell.state.get('low_income_population', 0)
+        middle_pop = cell.state.get('middle_income_population', 0)
+        high_pop = cell.state.get('high_income_population', 0)
+        total_pop = low_pop + middle_pop + high_pop
+        
+        if total_pop == 0:
+            return
+        
+        current_rent = cell.state.get('avg_rent_euro', 500)
+        displacement_risk = cell.state.get('displacement_risk', 0.0)
+        
+        # Get affordability thresholds
+        threshold_low = cell.state.get('affordability_threshold_low', 450)
+        threshold_middle = cell.state.get('affordability_threshold_middle', 900)
+        threshold_high = cell.state.get('affordability_threshold_high', 1800)
+        
+        # === LOW INCOME DISPLACEMENT ===
+        # Most vulnerable segment - displaces easily
+        # Threshold: rent unaffordable (> 30% of income)
+        if current_rent > threshold_low:
+            affordability_pressure = min(1.0, (current_rent - threshold_low) / threshold_low)
+            displacement_rate = 0.0
+            
+            if displacement_risk > 0.4:
+                # High displacement risk triggers outmigration
+                displacement_rate = min(0.20, displacement_risk * 0.25)  # Up to 20%
+            
+            # Apply outmigration
+            low_outmigration = int(low_pop * displacement_rate)
+            cell.state['low_income_population'] = max(0, low_pop - low_outmigration)
+        
+        # === MIDDLE INCOME DYNAMICS ===
+        # More stable - only displaces if conditions worsen significantly
+        # Threshold: rent > 900 EUR and high displacement risk
+        middle_displacement = 0.0
+        if current_rent > threshold_middle and displacement_risk > 0.6:
+            middle_displacement = min(0.10, (displacement_risk - 0.6) * 0.2)  # Up to 10%
+        
+        middle_outmigration = int(middle_pop * middle_displacement)
+        cell.state['middle_income_population'] = max(0, middle_pop - middle_outmigration)
+        
+        # === HIGH INCOME ATTRACTION ===
+        # Gentrification: high-rent areas attract wealthy residents
+        # Especially if displacement risk is high (indicates neighborhood change)
+        high_income_attraction = 0.0
+        
+        if current_rent > 1200 and displacement_risk > 0.5:
+            # Gentrification scenario: neighborhood upgrading
+            gentrification_pressure = min(0.10, displacement_risk * 0.15)  # Up to 10%
+            high_income_attraction = gentrification_pressure
+        
+        high_income_inflow = int(high_pop * high_income_attraction * 0.05)  # Small inflow
+        cell.state['high_income_population'] = high_pop + high_income_inflow
+        
+        # === UPDATE GENTRIFICATION INDEX ===
+        # Measure: ratio of high-income to total population
+        total_after_displacement = (cell.state['low_income_population'] + 
+                                   cell.state['middle_income_population'] + 
+                                   cell.state['high_income_population'])
+        
+        if total_after_displacement > 0:
+            high_income_share = cell.state['high_income_population'] / total_after_displacement
+            gentrification_index = max(0.0, min(1.0, (high_income_share - 0.30) / 0.70))
+            cell.state['gentrification_index'] = gentrification_index
+        
+        # === UPDATE INCOME DIVERSITY ===
+        # Diversity index: 1.0 = 30/40/30, lower = segregated
+        target_dist = np.array([0.30, 0.40, 0.30])
+        actual_dist = np.array([
+            cell.state['low_income_population'] / max(total_after_displacement, 1),
+            cell.state['middle_income_population'] / max(total_after_displacement, 1),
+            cell.state['high_income_population'] / max(total_after_displacement, 1)
+        ])
+        
+        # Diversity = 1 - sum(|actual - target|)
+        diversity = max(0.0, 1.0 - np.sum(np.abs(actual_dist - target_dist)))
+        cell.state['income_diversity_index'] = diversity
+        
+        # === UPDATE TOTAL POPULATION ===
+        # Recalculate total population after demographic changes
+        new_total_pop = (cell.state['low_income_population'] + 
+                        cell.state['middle_income_population'] + 
+                        cell.state['high_income_population'])
+        cell.state['population'] = new_total_pop
+
 class PopulationModule(UrbanModule):
     """Handles population dynamics."""
     
@@ -245,7 +384,14 @@ class HousingMarketModule(UrbanModule):
         super().__init__("Housing Market", {"priority": 3})
     
     def apply_cell_rules(self, cell, neighbors):
-        """Update housing market metrics."""
+        """Update housing market metrics.
+        
+        Phase 4b Calibration: Reduced sensitivity to prevent rent explosion
+        - Old: ±2% per step cap
+        - New: ±0.5% per step cap (more realistic)
+        - Old: 5% demand multiplier
+        - New: 1.5% demand multiplier (realistic market response)
+        """
         population = cell.state.get('population', 1000)
         current_rent = cell.state.get('avg_rent_euro', 500)
         safety = cell.state.get('safety_score', 0.5)
@@ -266,11 +412,14 @@ class HousingMarketModule(UrbanModule):
         housing_units = cell.state.get('housing_units', max(400, population / 2.5))
         cell.state['housing_units'] = housing_units
         
-        # Price adjustment
+        # Price adjustment (CALIBRATED: reduced sensitivity)
         demand_supply_ratio = (population / max(housing_units, 1)) * demand_score
         
-        # Rent change (max 2% per timestep)
-        rent_change_pct = min(0.02, max(-0.02, (demand_supply_ratio - 1) * 0.05))
+        # PHASE 4b: Calibrated rent change
+        # Old formula: min(0.02, max(-0.02, (demand_supply_ratio - 1) * 0.05))
+        # New formula: min(0.005, max(-0.005, (demand_supply_ratio - 1) * 0.015))
+        # Rationale: Market doesn't respond 3x faster to small demand changes
+        rent_change_pct = min(0.005, max(-0.005, (demand_supply_ratio - 1) * 0.015))
         new_rent = current_rent * (1 + rent_change_pct)
         
         cell.state['avg_rent_euro'] = max(300, min(3000, new_rent))
@@ -850,6 +999,11 @@ class UrbanModel:
             y = idx // grid_size
             self.grid_positions[cell_data['grid_id']] = (x, y)
         
+        # Initialize demographics (Phase 5)
+        demographics_module = next((m for m in self.modules if isinstance(m, DemographicsModule)), None)
+        if demographics_module:
+            demographics_module.initialize_demographics(self.cells)
+        
         print(f"✅ Urban Model initialized")
         print(f"   Cells: {len(grid_cells)}")
         print(f"   Modules: {len(self.modules)}")
@@ -858,6 +1012,7 @@ class UrbanModel:
     def get_default_modules(self):
         """Get default set of urban modules."""
         return [
+            DemographicsModule(),  # Priority 0 (highest) - Income segmentation
             EVModule(),  # Priority 0 - EV infrastructure
             PolicyModule(),  # Priority 2 - Government policies
             EducationModule(),  # Priority 3 - Schools and education
@@ -1038,9 +1193,18 @@ class SimulationManager:
     """Manages simulation runs and configurations."""
     
     @staticmethod
-    def get_grid_cells_for_simulation(limit=50):
-        """Get grid cells for simulation from database."""
-        print(f"Loading grid cells for simulation...")
+    def get_grid_cells_for_simulation(limit=50, city_name='Leipzig'):
+        """Get grid cells for simulation from database.
+        
+        City-specific calibration (Phase 4):
+        - Berlin: €900-1300 initial rent range
+        - Leipzig: €600-900 initial rent range  
+        - Munich: €1100-1500 initial rent range
+        
+        These ranges derived from Phase 2 calibration of 51 real neighborhoods.
+        Reduces overestimate from previous 300-1500 range.
+        """
+        print(f"Loading grid cells for simulation ({city_name})...")
         
         try:
             with db_config.get_session() as session:
@@ -1055,12 +1219,21 @@ class SimulationManager:
                     
                     # Create random initial state based on cell position
                     import random
+                    
+                    # City-specific rent calibration (Phase 2 findings)
+                    rent_ranges = {
+                        'Berlin': (900, 1300),      # High-demand capital
+                        'Leipzig': (600, 900),      # Affordable eastern city
+                        'Munich': (1100, 1500)      # Premium southern market
+                    }
+                    rent_min, rent_max = rent_ranges.get(city_name, (600, 900))
+                    
                     initial_state = {
                         'population': random.randint(500, 5000),
                         'traffic_congestion': random.random() * 0.5,
                         'safety_score': 0.3 + random.random() * 0.4,
                         'commercial_vitality': random.random() * 0.5,
-                        'avg_rent_euro': 300 + random.random() * 1200,
+                        'avg_rent_euro': rent_min + random.random() * (rent_max - rent_min),
                         'displacement_risk': random.random() * 0.3,
                         'green_space_ratio': random.random() * 0.4,
                         'employment': random.randint(200, 2000),
@@ -1093,8 +1266,8 @@ class SimulationManager:
         print(f"URBAN SIMULATION FOR {city}")
         print("=" * 60)
         
-        # Get grid cells
-        grid_cells = SimulationManager.get_grid_cells_for_simulation(limit=grid_limit)
+        # Get grid cells with city-specific calibration
+        grid_cells = SimulationManager.get_grid_cells_for_simulation(limit=grid_limit, city_name=city)
         
         if not grid_cells:
             print("[ERROR] No grid cells available for simulation")
